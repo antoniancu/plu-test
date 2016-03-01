@@ -1,0 +1,14 @@
+# Node and related ecosystem
+# ==========================
+.nodemonignore
+.sass-cache/
+npm-debug.log
+node_modules/
+
+# Backups and packages files
+# ==========================
+*.zip
+
+# MacOS files
+# ==========================
+.DS_Store

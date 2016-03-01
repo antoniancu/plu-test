@@ -1,0 +1,353 @@
+//SETUP PROJET DESIGN PARAMATERS
+$project-red: #ea2127;
+$project-grey: #bbb;
+$text-black: #7b7a7b;
+//SETUP CUSTOM FONTS WITH SUPPORT FOR EOT, WOFF2 WOFF TTF and SVG
+@font-face {
+  font-family: 'Neutraface-Bold';
+  src: url(../fonts/neutra2text_bold-webfont.eot);
+  src: url(../fonts/neutra2text_bold-webfont.eot?#iefix) format('embedded-opentype'), url(../fonts/neutra2text_bold-webfont.woff2) format('woff2'), url(../fonts/neutra2text_bold-webfont.woff) format('woff'), url(../fonts/neutra2text_bold-webfont.ttf) format('truetype'), url(../fonts/neutra2text_bold-webfont.svg#webfontregular) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neutraface-Book';
+  src: url(../fonts/neutra2text_book-webfont.eot);
+  src: url(../fonts/neutra2text_book-webfont.eot?#iefix) format('embedded-opentype'), url(../fonts/neutra2text_book-webfont.woff2) format('woff2'), url(../fonts/neutra2text_book-webfont.woff) format('woff'), url(../fonts/neutra2text_book-webfont.ttf) format('truetype'), url(../fonts/neutra2text_book-webfont.svg#webfontregular) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@mixin animated($duration) {
+  transition: all $duration ease;
+}
+
+
+@mixin wide-col-layout {
+  @media (min-width: 400px) {
+    @content;
+  }
+}
+
+@mixin two-col-layout {
+  @media (min-width: 670px) {
+    @content;
+  }
+}
+
+@mixin three-col-layout {
+  @media (min-width: 1000px) {
+    @content;
+  }
+}
+
+a,
+a:active,
+a:hover,
+a:visited {
+  color: $project-grey;
+}
+
+body {
+  margin: 0px;
+}
+
+//DEV overrides for filler blocks in the product cards
+.dev-card {
+  .product-image {
+    margin: 0 auto;
+  }
+}
+
+.diag-strikethrough {
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 59%;
+    left: -20%;
+    border-color: inherit;
+    border-top: 1px solid;
+    width: 150%;
+    transform: rotate(-15deg);
+  }
+}
+
+// Special Card Styling
+.promo-card {
+
+  padding: 10px 0 !important;
+  background: white !important;
+  padding: 0 !important;
+  img {
+    margin: 0 auto;
+  }
+  @include three-col-layout {
+    //This one is tricky. Using a negative margin hack to display it as per comps, but a production solution would need to be more elegant to alow for more items to display correctly. As of now, an extra card would overlay the tall promo card.
+    margin-bottom: -250px !important;
+  }
+}
+
+.button-group {
+  cursor: pointer;
+  position: relative;
+  margin-top: 20px;
+
+  label {
+    font-size: .8em;
+    color: $project-grey;
+
+  }
+
+  ul.dropdown-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    box-shadow: 0 1px 5px $project-grey;
+    padding: 10px;
+    margin: 0;
+    border: 1px solid $project-grey;
+    width: 80%;
+    list-style: none;
+
+    li {
+      color: $project-grey;
+      padding: 5px 0;
+      border-bottom: 1px dotted $project-grey;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+.button {
+  @include animated(.25s);
+  background-color: transparent;
+  border: 1px solid $project-grey;
+  box-sizing: border-box;
+  color: $project-grey;
+  cursor: pointer;
+  display: block;
+  font-size: .8em;
+  padding: 10px;
+  text-decoration: none;
+  &.buy-now {
+    font-family: 'Neutraface-bold';
+    color: $project-red;
+    margin: 20px 0;
+    border: 1px solid $project-red;
+    text-align: center;
+    max-width: 120px;
+    text-transform: uppercase;
+
+    &:hover {
+      @include animated(.25s);
+      background-color: $project-red;
+      color: #ffffff;
+    }
+  }
+}
+
+.title-line {
+  overflow: hidden;
+  text-align: center;
+
+  h2 {
+    color: $project-red;
+    display: inline-block;
+    font-family: 'Neutraface-Bold';
+    padding: 0 15px;
+    position: relative;
+
+    &:before,
+    &:after {
+      background: $project-red;
+      content: '';
+      display: block;
+      height: 1px;
+      position: absolute;
+      right: 100%;
+      top: 50%;
+      width: 500%;
+    }
+
+    &:after {
+      left: 100%;
+    }
+  }
+}
+
+.container {
+  max-width: 1000px;
+  padding: 5px;
+  margin: 0 auto;
+}
+
+ul#gift-sets {
+  display: flex; // because #screwfloats. It's 2016!
+  flex-flow: row wrap;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+
+  @include two-col-layout {
+    flex-flow: row wrap;
+  }
+
+  @include three-col-layout {
+    flex-flow: row wrap;
+    justify-content: flex-start;
+  }
+
+  li.product-card {
+
+    //Flex settings as a child of product list
+    flex: 1 0 100%;
+    @include two-col-layout{
+      flex: 0 0 320px;
+    }
+
+    //Flex settings as a parent of product details
+    align-items: center;
+    display: flex;
+    flex-flow: row nowrap;
+    box-sizing: border-box; //This one is key: the total flex-basis must include any borders and paddings too!
+
+
+    // Card Styling Begins
+    margin: 5px;
+    padding: 5px 5px 0;
+    background: rgb(245, 244, 247);  // Fallback for old browsers
+    background: radial-gradient(at bottom, rgba(255, 255, 255, 1) 0%, rgba(245, 244, 247, 1) 100%); // Gradient Permalink http://colorzilla.com/gradient-editor/#f5f4f7+0,ffffff+100
+    @include two-col-layout{
+      padding: 5px 15px 0;
+    }
+
+    .product-image {
+      flex: 1 0 25%;
+      align-self: center;
+      img {
+        display: block;
+      }
+    }
+
+    .product-info {
+      flex-grow: 1;
+      font-family: 'Neutraface-book';
+      font-weight: 200;
+
+      .product-title {
+        font-size: 0.95em;
+        font-weight: bold;
+        color: $text-black;
+        margin: 0;
+        letter-spacing: 0.03em;
+        max-width: 130px;
+        text-transform: uppercase;
+      }
+
+      .price {
+        display: inline;
+        margin: 0 .5em 0 0;
+
+        &.regular { color: $project-grey; }
+        &.promo { color: $project-red; }
+        &.slashed { @extend .diag-strikethrough; }
+
+      }
+
+      .details-link {
+        display: block;
+        font-size:  .8em;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  li.featured-wide {
+    //Inherits some basic flex properties from the regular card already
+    //Flex settings as a child of product list
+
+    //Flex settings as a flex container to product description
+    flex-flow: column wrap;
+    @include wide-col-layout {
+      flex-flow: row nowrap;
+    }
+
+    @include two-col-layout {
+      flex: 0 0 650px;
+    }
+    @include three-col-layout {
+      flex: 0 1 650px;
+    }
+    .product-image {
+      order: 2;
+      align-self: flex-end;
+      margin-top: 1rem;
+      max-width: 344px;
+
+      img {
+        width: 90%;
+      }
+
+      @include wide-col-layout {
+        order: 1
+      }
+    }
+    .product-info {
+      order: 1;
+      .product-title {
+        margin: 1rem auto 0;
+      }
+      text-align: center;
+      .button.buy-now {
+        margin: 20px auto;
+      }
+    }
+  }
+}
+
+//Fullscreen modal pop-up displayed when clicking on buy now button or images
+#buynow-alert {
+  background: rgba(0, 0, 0, .5);
+  display: none;
+  font-family: 'Neutraface-Book';
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100vw;
+
+  .content {
+    background-color: #ffffff;
+    border: 1px solid $project-red;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    height: auto;
+    line-height: 1.5em;
+    margin: 2rem auto;
+    padding: 2rem;
+    width: 50%;
+
+  }
+
+  .button {
+    margin: 0 auto;
+  }
+}
+
+footer {
+  font-family: 'Neutraface-Book';
+  font-size: .8em;
+  color: $project-grey;
+  padding: 1rem;
+  border-top: 1px solid $project-grey;
+  text-align: center;
+  margin-top: 5px;
+}
