@@ -23,20 +23,24 @@ $text-black: #7b7a7b;
   transition: all $duration ease;
 }
 
+.clearfix {
+	content: "";
+	display: table;
+}
 
-@mixin wide-col-layout {
+@mixin wide-col-layout() {
   @media (min-width: 400px) {
     @content;
   }
 }
 
-@mixin two-col-layout {
+@mixin two-col-layout() {
   @media (min-width: 670px) {
     @content;
   }
 }
 
-@mixin three-col-layout {
+@mixin three-col-layout() {
   @media (min-width: 1000px) {
     @content;
   }
@@ -51,7 +55,16 @@ a:visited {
 
 body {
   margin: 0px;
+  //display: flex;
 }
+
+header,
+section,
+footer
+{
+  flex: 1 0 100%;
+}
+
 
 //DEV overrides for filler blocks in the product cards
 .dev-card {
@@ -72,21 +85,6 @@ body {
     border-top: 1px solid;
     width: 150%;
     transform: rotate(-15deg);
-  }
-}
-
-// Special Card Styling
-.promo-card {
-
-  padding: 10px 0 !important;
-  background: white !important;
-  padding: 0 !important;
-  img {
-    margin: 0 auto;
-  }
-  @include three-col-layout {
-    //This one is tricky. Using a negative margin hack to display it as per comps, but a production solution would need to be more elegant to alow for more items to display correctly. As of now, an extra card would overlay the tall promo card.
-    margin-bottom: -250px !important;
   }
 }
 
@@ -152,7 +150,7 @@ body {
   }
 }
 
-.title-line {
+.title-sidelines {
   overflow: hidden;
   text-align: center;
 
@@ -182,21 +180,22 @@ body {
 }
 
 .container {
-  max-width: 1000px;
+  box-sizing: border-box;
   padding: 5px;
   margin: 0 auto;
+  max-width: 670px;
+  width: 100%;
+  @include three-col-layout{
+    max-width: 1000px;
+  }
 }
 
-ul#gift-sets {
-  display: flex; // because #screwfloats. It's 2016!
-  flex-flow: row wrap;
+#gift-sets {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  justify-content: center;
 
   @include two-col-layout {
-    flex-flow: row wrap;
   }
 
   @include three-col-layout {
@@ -204,12 +203,11 @@ ul#gift-sets {
     justify-content: flex-start;
   }
 
-  li.product-card {
-
-    //Flex settings as a child of product list
-    flex: 1 0 100%;
+  .product-card {
     @include two-col-layout{
-      flex: 0 0 320px;
+      height: 280px;
+      float: left;
+      width: 320px;
     }
 
     //Flex settings as a parent of product details
@@ -269,11 +267,22 @@ ul#gift-sets {
       }
     }
   }
+  // Special Card Styling
+  .double-tall {
+    height: 570px;
+    padding: 10px 0;
+    background: white;
+    border: 1px solid $project-red;
+    padding: 0;
+    img {
+      margin: 0 auto;
+    }
+    @include two-col-layout {
+      float:right;
+    }
+  }
 
-  li.featured-wide {
-    //Inherits some basic flex properties from the regular card already
-    //Flex settings as a child of product list
-
+  .double-wide {
     //Flex settings as a flex container to product description
     flex-flow: column wrap;
     @include wide-col-layout {
@@ -281,11 +290,9 @@ ul#gift-sets {
     }
 
     @include two-col-layout {
-      flex: 0 0 650px;
+      width: 650px;
     }
-    @include three-col-layout {
-      flex: 0 1 650px;
-    }
+
     .product-image {
       order: 2;
       align-self: flex-end;
